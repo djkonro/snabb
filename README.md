@@ -1,10 +1,3 @@
-# NOTE 
-<pre>
-This branch has been modified, to add support for AF_XDP socket and there are some additional
-requirements for building the code. See the section on <b>"How do I get started?"</b> for more 
-information.
-</pre>
-
 ![Snabb](snabb.png)
 
 # Snabb
@@ -101,35 +94,14 @@ from an interactive shell.
 
 ## How do I get started?
 
-#### Linux Kernel version 4.18 and above required.
+Setting up a Snabb development environment takes around one
+minute:
 
-Download and build the linux kernel source code
-- https://kernelnewbies.org/KernelBuild
-
-Set required linux environment variables
 ```
-$ export LINUX_SOURCE_DIR=path/to/kernel_source_folder
-$ export LD_LIBRARY_PATH="$LINUX_SOURCE_DIR/tools/lib/bpf/"
-```
-
-Set up the Snabb development environment:
-```
-$ git clone https://github.com/djkonro/snabb.git
+$ git clone https://github.com/SnabbCo/snabb
 $ cd snabb
-$ git checkout -b AfxdpSock 
 $ make -j
-```
-
-Manually build and copy BPF program and copy to Snabb output folder
-```
-$ cd src/apps/socket/af_xdp/
-$ clang -c  xdpsock_kern.c -I$LINUX_SOURCE_DIR/usr/include/ -I$LINUX_SOURCE_DIR/include/ -I$LINUX_SOURCE_DIR/tools/lib/  -I$LINUX_SOURCE_DIR/tools/testing/selftests/bpf -D__KERNEL__ -D__BPF_TRACING__ -Wno-unused-value -Wno-pointer-sign  -Wno-compare-distinct-pointer-types -Wno-gnu-variable-sized-type-not-at-end -Wno-address-of-packed-member -Wno-tautological-compare   -Wno-unknown-warning-option  -O2 -emit-llvm -c -o -| llc -march=bpf -filetype=obj  -o xdpsock_user_kern.o
-$ mv xdpsock_user_kern.o ../../../obj/apps/socket/af_xdp/
-```
-Run test
-```
-$ cd snabb/src
-$ sudo LD_LIBRARY_PATH="$LINUX_SOURCE_DIR/tools/lib/bpf/" ./snabb snsh -t apps.socket.af_xdp.xdpsock
+$ sudo src/snabb --help
 ```
 
 The `snabb` binary is stand-alone, includes all of the applications,
